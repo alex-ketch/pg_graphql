@@ -788,7 +788,7 @@ impl ___Type for __Type {
             Self::Node(x) => x.enum_values(_include_deprecated),
             Self::NodeInterface(x) => x.enum_values(_include_deprecated),
             Self::InsertInput(x) => x.enum_values(_include_deprecated),
-            Self::InsertOnConflictInput(x) => x.enum_values(),
+            Self::InsertOnConflictInput(x) => x.enum_values(_include_deprecated),
             Self::InsertResponse(x) => x.enum_values(_include_deprecated),
             Self::UpdateInput(x) => x.enum_values(_include_deprecated),
             Self::UpdateResponse(x) => x.enum_values(_include_deprecated),
@@ -1454,17 +1454,9 @@ impl ___Type for MutationType {
                         },
                         __InputValue {
                             name_: "onConflict".to_string(),
-                            type_: __Type::NonNull(NonNullType {
-                                type_: Box::new(__Type::List(ListType {
-                                    type_: Box::new(__Type::NonNull(NonNullType {
-                                        type_: Box::new(__Type::InsertOnConflictInput(
-                                            InsertOnConflictType {
-                                                table: Arc::clone(table),
-                                                schema: Arc::clone(&self.schema),
-                                            },
-                                        )),
-                                    })),
-                                })),
+                            type_: __Type::InsertOnConflictInput(InsertOnConflictType {
+                                table: Arc::clone(table),
+                                schema: Arc::clone(&self.schema),
                             }),
                             description: None,
                             default_value: None,
@@ -3437,7 +3429,6 @@ impl ___Type for FuncCallResponseType {
 }
 
 use std::str::FromStr;
-use std::string::ToString;
 
 #[derive(Clone, Copy, Debug)]
 pub enum FilterOp {
@@ -4155,7 +4146,7 @@ impl __Schema {
                     enum_: EnumSource::TableColumns(Arc::clone(table)),
                     schema: Arc::clone(&schema_rc),
                 }));
-                types_.push(__Type::InsertOnConflictType(InsertOnConflictType {
+                types_.push(__Type::InsertOnConflictInput(InsertOnConflictType {
                     table: Arc::clone(table),
                     schema: Arc::clone(&schema_rc),
                 }));
